@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: cert-manager
+  namespace: argocd
+spec:
+  goTemplate: true
+  generators:
+    - clusters:
+        selector:
+          matchLabels:
+            provider: proxmox
+  template:
+    metadata:
+      name: 'cert-manager-{{.name}}'
+    spec:
+      project: default
+      sources:
+        - repoURL: https://github.com/lowranceworks/k8s-platform.git
+          targetRevision: main
+          path: charts/cert-manager
+          helm:
+            valueFiles:
+              - $values/values/providers/proxmox/cert-manager.yaml
+        - repoURL: https://github.com/lowranceworks/k8s-platform.git
+          targetRevision: main
+          ref: values
+      destination:
+        server: '{{.server}}'
+        namespace: cert-manager
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

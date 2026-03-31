@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: istio
+  namespace: argocd
+spec:
+  goTemplate: true
+  generators:
+    - clusters:
+        selector:
+          matchLabels:
+            provider: proxmox
+  template:
+    metadata:
+      name: 'istio-{{.name}}'
+    spec:
+      project: default
+      sources:
+        - repoURL: https://github.com/lowranceworks/k8s-platform.git
+          targetRevision: main
+          path: charts/istio
+          helm:
+            valueFiles:
+              - $values/values/providers/proxmox/istio.yaml
+        - repoURL: https://github.com/lowranceworks/k8s-platform.git
+          targetRevision: main
+          ref: values
+      destination:
+        server: '{{.server}}'
+        namespace: istio-system
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

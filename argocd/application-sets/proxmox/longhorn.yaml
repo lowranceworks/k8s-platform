@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: longhorn
+  namespace: argocd
+spec:
+  goTemplate: true
+  generators:
+    - clusters:
+        selector:
+          matchLabels:
+            provider: proxmox
+  template:
+    metadata:
+      name: 'longhorn-{{.name}}'
+    spec:
+      project: default
+      sources:
+        - repoURL: https://github.com/lowranceworks/k8s-platform.git
+          targetRevision: main
+          path: charts/longhorn
+          helm:
+            valueFiles:
+              - $values/values/providers/proxmox/longhorn.yaml
+        - repoURL: https://github.com/lowranceworks/k8s-platform.git
+          targetRevision: main
+          ref: values
+      destination:
+        server: '{{.server}}'
+        namespace: longhorn-system
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

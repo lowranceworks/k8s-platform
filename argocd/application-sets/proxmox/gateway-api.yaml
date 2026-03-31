@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: gateway-api
+  namespace: argocd
+spec:
+  goTemplate: true
+  generators:
+    - clusters:
+        selector:
+          matchLabels:
+            provider: proxmox
+  template:
+    metadata:
+      name: 'gateway-api-{{.name}}'
+    spec:
+      project: default
+      sources:
+        - repoURL: https://github.com/lowranceworks/k8s-platform.git
+          targetRevision: main
+          path: charts/gateway-api
+          helm:
+            valueFiles:
+              - $values/values/providers/proxmox/gateway-api.yaml
+        - repoURL: https://github.com/lowranceworks/k8s-platform.git
+          targetRevision: main
+          ref: values
+      destination:
+        server: '{{.server}}'
+        namespace: gateway-system
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: cilium
+  namespace: argocd
+spec:
+  goTemplate: true
+  generators:
+    - clusters:
+        selector:
+          matchLabels:
+            provider: proxmox
+  template:
+    metadata:
+      name: 'cilium-{{.name}}'
+    spec:
+      project: default
+      sources:
+        - repoURL: https://github.com/lowranceworks/k8s-platform.git
+          targetRevision: main
+          path: charts/cilium
+          helm:
+            valueFiles:
+              - $values/values/providers/proxmox/cilium.yaml
+        - repoURL: https://github.com/lowranceworks/k8s-platform.git
+          targetRevision: main
+          ref: values
+      destination:
+        server: '{{.server}}'
+        namespace: kube-system
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
