@@ -1,0 +1,58 @@
+# Proxmox-specific Cilium values for Talos Linux nodes.
+#
+# Migration from Flannel to Cilium:
+# 1. Deploy with cni.exclusive=false to coexist with Flannel
+# 2. Once Cilium agents are healthy on all nodes, remove Flannel
+# 3. Set cni.exclusive=true and routingMode=native
+#
+# Current state: Step 1 - migration mode
+
+cilium:
+  # -- Allow Cilium to coexist with existing Flannel CNI during migration.
+  cni:
+    exclusive: false
+
+  # -- Use VXLAN overlay to match Flannel's existing networking model.
+  routingMode: tunnel
+  tunnelProtocol: vxlan
+
+  # -- Talos Linux: drop SYS_MODULE as Talos does not allow loading
+  # kernel modules from Kubernetes workloads.
+  securityContext:
+    capabilities:
+      ciliumAgent:
+        - CHOWN
+        - KILL
+        - NET_ADMIN
+        - NET_RAW
+        - IPC_LOCK
+        - SYS_ADMIN
+        - SYS_RESOURCE
+        - DAC_OVERRIDE
+        - FOWNER
+        - SETGID
+        - SETUID
+      cleanCiliumState:
+        - NET_ADMIN
+        - SYS_ADMIN
+        - SYS_RESOURCE
+
+  # -- Talos Linux: reuse the existing cgroupv2 mount.
+  cgroup:
+    autoMount:
+      enabled: false
+    hostRoot: /sys/fs/cgroup
+
+  # -- Talos Linux: use KubePrism endpoint for kube-proxy replacement.
+  k8sServiceHost: localhost
+  k8sServicePort: 7445
+
+  # -- Talos Linux: required when forwardKubeDNSToHost is enabled (default
+  # since Talos 1.8+), otherwise DNS will not work with eBPF host routing.
+  bpf:
+    hostLegacyRouting: true
+
+  # -- Inherit existing pod CIDR from the cluster.
+  operator:
+    unmanagedPodWatcher:
+      restart: false

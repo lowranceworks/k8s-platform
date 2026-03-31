@@ -1,0 +1,9 @@
+# Proxmox-specific Istio values.
+#
+# On-premises clusters use Istio for service mesh
+# capabilities. Ingress gateways and mTLS settings
+# are configured separately.
+
+base: {}
+
+istiod: {}

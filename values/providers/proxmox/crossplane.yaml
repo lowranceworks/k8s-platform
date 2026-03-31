@@ -1,0 +1,7 @@
+# Proxmox-specific Crossplane values.
+#
+# On-premises clusters use Crossplane to manage infrastructure
+# resources. Provider credentials are configured via
+# Crossplane ProviderConfigs (managed separately).
+
+crossplane: {}

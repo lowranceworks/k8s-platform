@@ -1,0 +1,11 @@
+# Proxmox-specific cert-manager values.
+#
+# On-premises clusters use cert-manager with Cloudflare
+# DNS-01 validation for Let's Encrypt certificates.
+
+cert-manager: {}
+
+cloudflare:
+  enabled: true
+  acmeEmail: lowranceworks@gmail.com
+  gcpProjectID: lowranceworks-platform-prod

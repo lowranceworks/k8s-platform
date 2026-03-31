@@ -1,0 +1,7 @@
+# Proxmox-specific MetalLB values.
+#
+# On-premises clusters use MetalLB for bare-metal
+# load balancing. IPAddressPool and L2Advertisement
+# resources are managed separately.
+
+metallb: {}

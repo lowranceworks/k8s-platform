@@ -1,0 +1,7 @@
+# Proxmox-specific Longhorn values.
+#
+# On-premises clusters use Longhorn for distributed
+# block storage. Disk and node scheduling settings
+# should be adjusted for the Proxmox storage topology.
+
+longhorn: {}

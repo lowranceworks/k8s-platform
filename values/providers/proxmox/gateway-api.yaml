@@ -1,0 +1,7 @@
+# Proxmox-specific Gateway API values.
+#
+# On-premises clusters install Gateway API CRDs to enable
+# gateway-based ingress. GatewayClass and Gateway resources
+# are managed separately.
+
+gateway-api: {}
