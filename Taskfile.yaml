@@ -1,0 +1,65 @@
+version: '3'
+
+tasks:
+  lint:
+    desc: Run yamllint on all YAML files
+    cmds:
+      - yamllint -c .yamllint .
+
+  pre-commit:
+    desc: Run pre-commit hooks on all files
+    cmds:
+      - pre-commit run --all-files
+
+  helm:deps:
+    desc: Update Helm chart dependencies
+    cmds:
+      - |
+        for chart in charts/*/; do
+          if [ -f "${chart}Chart.yaml" ]; then
+            echo "Updating dependencies for ${chart}..."
+            helm dependency update "${chart}" 2>/dev/null || true
+          fi
+        done
+
+  helm:template:
+    desc: Template a Helm chart to verify rendering
+    vars:
+      CHART: '{{.CHART | default ""}}'
+      PROVIDER: '{{.PROVIDER | default ""}}'
+    cmds:
+      - |
+        if [ -z "{{.CHART}}" ]; then
+          echo "Error: CHART is required"
+          echo "Usage: task helm:template CHART=cert-manager PROVIDER=proxmox"
+          exit 1
+        fi
+
+        chart_path="charts/{{.CHART}}"
+        provider_values="values/providers/{{.PROVIDER}}/{{.CHART}}.yaml"
+
+        if [ ! -d "$chart_path" ]; then
+          echo "Error: Chart not found at $chart_path"
+          exit 1
+        fi
+
+        args="--generate-name $chart_path"
+        [ -n "{{.PROVIDER}}" ] && [ -f "$provider_values" ] && args="$args -f $provider_values"
+
+        helm template $args
+
+  validate:
+    desc: Validate all YAML files and Helm charts
+    cmds:
+      - task: lint
+      - task: helm:deps
+      - |
+        echo "=== Validating Helm charts ==="
+        for chart in charts/*/; do
+          if [ -f "${chart}Chart.yaml" ]; then
+            echo "Validating ${chart}..."
+            helm lint "${chart}" 2>/dev/null || true
+          fi
+        done
+        echo ""
+        echo "Validation complete."
