@@ -1,0 +1,11 @@
+apiVersion: v2
+name: cilium
+description: Cilium - eBPF-based networking, security, and observability
+type: application
+version: 0.1.0
+appVersion: "1.19.1"
+
+dependencies:
+  - name: cilium
+    version: 1.19.1
+    repository: https://helm.cilium.io/

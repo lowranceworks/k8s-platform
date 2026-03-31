@@ -1,0 +1,11 @@
+apiVersion: v2
+name: external-secrets
+description: External Secrets Operator - syncs secrets from external providers into Kubernetes
+type: application
+version: 0.1.0
+appVersion: "0.14.0"
+
+dependencies:
+  - name: external-secrets
+    version: 0.14.0
+    repository: https://charts.external-secrets.io

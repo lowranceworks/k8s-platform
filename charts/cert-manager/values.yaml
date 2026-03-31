@@ -1,0 +1,45 @@
+# Default values for the cert-manager wrapper chart.
+# Provider-specific overrides go in values/providers/<provider>/cert-manager.yaml
+
+cert-manager:
+  crds:
+    enabled: true
+
+  replicaCount: 1
+
+  serviceAccount:
+    create: true
+
+  securityContext:
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+
+  webhook:
+    timeoutSeconds: 10
+    securityContext:
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
+
+  cainjector:
+    securityContext:
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
+
+# Cloudflare DNS-01 integration for Let's Encrypt.
+# Enable per-provider in values/providers/<provider>/cert-manager.yaml.
+cloudflare:
+  enabled: false
+  acmeEmail: ""
+  gcpProjectID: ""
+  remoteKey: cloudflare-cert-manager-dns-api-token
+  secretName: cloudflare-dns-api-token

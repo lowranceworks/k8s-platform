@@ -1,0 +1,17 @@
+# Default values for the Cilium wrapper chart.
+# Provider-specific overrides go in values/providers/<provider>/cilium.yaml
+
+cilium:
+  ipam:
+    mode: kubernetes
+
+  kubeProxyReplacement: true
+
+  operator:
+    replicas: 1
+
+  hubble:
+    relay:
+      enabled: true
+    ui:
+      enabled: false

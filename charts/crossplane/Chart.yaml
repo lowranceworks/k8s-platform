@@ -1,0 +1,11 @@
+apiVersion: v2
+name: crossplane
+description: Crossplane - build control planes without needing to write code
+type: application
+version: 0.1.0
+appVersion: "2.2.0"
+
+dependencies:
+  - name: crossplane
+    version: 2.2.0
+    repository: https://charts.crossplane.io/stable

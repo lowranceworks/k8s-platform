@@ -1,0 +1,12 @@
+# Default values for the MetalLB wrapper chart.
+# Provider-specific overrides go in values/providers/<provider>/metallb.yaml
+
+metallb:
+  crds:
+    enabled: true
+
+  speaker:
+    enabled: true
+
+  controller:
+    enabled: true

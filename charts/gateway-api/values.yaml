@@ -1,0 +1,6 @@
+# Default values for the Gateway API wrapper chart.
+# Provider-specific overrides go in values/providers/<provider>/gateway-api.yaml
+
+gateway-api:
+  crds:
+    enabled: true

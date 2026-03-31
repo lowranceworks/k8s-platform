@@ -1,0 +1,12 @@
+# Default values for the Longhorn wrapper chart.
+# Provider-specific overrides go in values/providers/<provider>/longhorn.yaml
+
+longhorn:
+  defaultSettings:
+    defaultReplicaCount: 2
+
+  persistence:
+    defaultClassReplicaCount: 2
+
+  ingress:
+    enabled: false

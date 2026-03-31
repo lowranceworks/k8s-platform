@@ -1,0 +1,38 @@
+# Default values for the Crossplane wrapper chart.
+# Provider-specific overrides go in values/providers/<provider>/crossplane.yaml
+
+crossplane:
+  replicas: 1
+
+  serviceAccount:
+    create: true
+
+  securityContextCrossplane:
+    runAsNonRoot: true
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
+    seccompProfile:
+      type: RuntimeDefault
+
+  securityContextRBACManager:
+    runAsNonRoot: true
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
+    seccompProfile:
+      type: RuntimeDefault
+
+  rbacManager:
+    deploy: true
+    replicas: 1
+
+  webhooks:
+    enabled: true
+
+  metrics:
+    enabled: false

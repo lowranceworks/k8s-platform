@@ -1,0 +1,28 @@
+# Default values for the External Secrets Operator wrapper chart.
+# Provider-specific overrides go in values/providers/<provider>/external-secrets.yaml
+
+external-secrets:
+  installCRDs: true
+
+  replicaCount: 1
+
+  serviceAccount:
+    create: true
+
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    enabled: true
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 1000
+    seccompProfile:
+      type: RuntimeDefault
+
+  webhook:
+    create: true
+
+  certController:
+    create: true
