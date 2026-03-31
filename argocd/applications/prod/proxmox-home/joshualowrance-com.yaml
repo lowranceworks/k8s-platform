@@ -1,17 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: joshualowrance.com
+  name: joshualowrance-com
   namespace: argocd
 spec:
   project: default
   source:
-    repoURL: https://github.com/lowranceworks/joshualowrance.com.git
-    targetRevision: HEAD
-    path: frontend/web/
+    repoURL: https://github.com/lowranceworks/k8s-platform.git
+    targetRevision: main
+    path: charts/joshualowrance.com
   destination:
     server: https://kubernetes.default.svc
-    namespace: joshualowrance.com
+    namespace: joshualowrance-com
   syncPolicy:
     automated:
       prune: true
